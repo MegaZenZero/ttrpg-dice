@@ -1,97 +1,46 @@
 import { useState, useEffect } from "react";
 import zoomSdk from "@zoom/appssdk";
 import { initializeApp } from "firebase/app";
-import {
-  getDatabase,
-  ref,
-  push,
-  onChildAdded,
-  get,
-  child,
-  remove,
-} from "firebase/database";
+import { getDatabase, ref, push, onChildAdded, query, limitToLast } from "firebase/database";
 import "./index.css";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCTy3UKnRfwjVN2f0o-xBDYqIblGSu8g7A",
-  authDomain: "zoom-ttrpg-dice-app.firebaseapp.com",
-  projectId: "zoom-ttrpg-dice-app",
-  storageBucket: "zoom-ttrpg-dice-app.firebasestorage.app",
-  messagingSenderId: "762744886186",
-  appId: "1:762744886186:web:ac0af79de61e53440911d3",
-  measurementId: "G-YEVKWQYXNB"
+  // your firebase config
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
-const getColorForName = (name) => {
-  const colors = ["red", "blue", "green", "purple", "orange", "teal", "pink"];
-  const hash = Array.from(name).reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  return colors[hash % colors.length];
-};
-
-const getColorClass = (color) => {
-  const map = {
-    red: "text-red-600",
-    blue: "text-blue-600",
-    green: "text-green-600",
-    purple: "text-purple-600",
-    orange: "text-orange-600",
-    teal: "text-teal-600",
-    pink: "text-pink-600",
-  };
-  return map[color] || "text-gray-700";
-};
 
 export default function TTRPGDice() {
   const [playerName, setPlayerName] = useState("Player");
   const [rollHistory, setRollHistory] = useState([]);
 
   useEffect(() => {
+    // Grab Zoom user display name
     zoomSdk.config({ capabilities: ["getUserContext"] })
       .then(() => zoomSdk.getUserContext())
-      .then((ctx) => {
+      .then(ctx => {
         if (ctx?.displayName) setPlayerName(ctx.displayName);
       })
-      .catch((err) => console.error("Zoom SDK error:", err));
+      .catch(console.error);
 
-    const rollRef = ref(db, "rolls");
-
-    onChildAdded(rollRef, (snapshot) => {
+    const rollRef = query(ref(db, "rolls"), limitToLast(10));
+    const unsub = onChildAdded(rollRef, snapshot => {
       const data = snapshot.val();
-      if (!data || !data.text || !data.color) return;
-
-      const entry = { text: data.text, color: data.color };
-
-      setRollHistory((prev) => {
-        if (prev.some((e) => e.text === entry.text)) return prev;
-        return [entry, ...prev.slice(0, 9)];
-      });
+      setRollHistory(prev => [data, ...prev.slice(0, 9)]);
     });
+
+    return () => unsub(); // cleanup
   }, []);
 
   const rollDie = (sides) => {
     const result = Math.floor(Math.random() * sides) + 1;
-    const color = getColorForName(playerName);
     const entry = {
-      text: `${playerName} rolled d${sides}: ${result}`,
-      color,
+      name: playerName,
+      sides,
+      result
     };
-
-    const rollRef = ref(db, "rolls");
-    push(rollRef, entry).then(() => {
-      get(rollRef).then((snapshot) => {
-        const allRolls = snapshot.val();
-        if (allRolls) {
-          const keys = Object.keys(allRolls);
-          if (keys.length > 10) {
-            const oldestKey = keys[0];
-            remove(child(rollRef, oldestKey));
-          }
-        }
-      });
-    });
+    push(ref(db, "rolls"), entry);
   };
 
   return (
@@ -114,8 +63,8 @@ export default function TTRPGDice() {
           <h2 className="font-semibold mb-1">Recent Rolls:</h2>
           <ul className="text-sm">
             {rollHistory.map((entry, idx) => (
-              <li key={idx} className={getColorClass(entry.color)}>
-                • {entry.text}
+              <li key={idx}>
+                • <span className="text-indigo-700 font-medium">{entry.name}</span> rolled d{entry.sides}: {entry.result}
               </li>
             ))}
           </ul>

@@ -12,7 +12,13 @@ import {
 import "./index.css";
 
 const firebaseConfig = {
-  // Your real config here
+  apiKey: "AIzaSyCTy3UKnRfwjVN2f0o-xBDYqIblGSu8g7A",
+  authDomain: "zoom-ttrpg-dice-app.firebaseapp.com",
+  projectId: "zoom-ttrpg-dice-app",
+  storageBucket: "zoom-ttrpg-dice-app.firebasestorage.app",
+  messagingSenderId: "762744886186",
+  appId: "1:762744886186:web:ac0af79de61e53440911d3",
+  measurementId: "G-YEVKWQYXNB"
 };
 
 const app = initializeApp(firebaseConfig);

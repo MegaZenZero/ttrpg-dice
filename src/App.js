@@ -93,7 +93,11 @@ export default function TTRPGDice() {
       timestamp: Date.now()
     };
     push(ref(db, "rolls"), entry);
+      .then(() => console.log("✅ Roll pushed to Firebase"))
+      .catch((err) => console.error("❌ Firebase push error:", err));
   };
+
+  console.log("Pushing roll to Firebase:", entry);
 
   return (
     <div className="p-4 max-w-md mx-auto rounded-xl shadow-md text-center bg-white">

@@ -103,7 +103,7 @@ export default function TTRPGDice() {
       </p>
       
       
-      {/* Debug info box - we'll remove this once it's working */
+      {/* Debug info box - we'll remove this once it's working */}
       <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded text-xs">
         <div className="font-semibold text-blue-800">Debug Info:</div>
         <div className="mt-1">
@@ -119,7 +119,6 @@ export default function TTRPGDice() {
           </details>
         )}
       </div>
-      }
       
       <div className="grid grid-cols-3 gap-2 mb-4">
         {[4, 6, 8, 10, 12, 20, 100].map((sides) => (

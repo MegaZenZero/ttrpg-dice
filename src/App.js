@@ -92,12 +92,13 @@ export default function TTRPGDice() {
       result,
       timestamp: Date.now()
     };
-    push(ref(db, "rolls"), entry);
+    
+    console.log("Pushing roll to Firebase:", entry);
+    
+    push(ref(db, "rolls"), entry)
       .then(() => console.log("✅ Roll pushed to Firebase"))
       .catch((err) => console.error("❌ Firebase push error:", err));
   };
-
-  console.log("Pushing roll to Firebase:", entry);
 
   return (
     <div className="p-4 max-w-md mx-auto rounded-xl shadow-md text-center bg-white">
@@ -105,7 +106,6 @@ export default function TTRPGDice() {
       <p className="text-sm text-gray-500 mb-2">
         Tap a die to roll. Everyone sees the result!
       </p>
-      
       
       {/* Debug info box - we'll remove this once it's working */}
       <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded text-xs">

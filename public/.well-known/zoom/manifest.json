@@ -41,7 +41,13 @@
     "imgSrc": [
       "'self'",
       "data:"
-    ]
+    ],
+    "domainAllowList": [
+    "ttrpg-dice.vercel.app",
+    "*.firebaseio.com",
+    "www.gstatic.com",
+    "www.googleapis.com"
+  ]
   },
   "developer": {
     "name": "Ryan Cole",

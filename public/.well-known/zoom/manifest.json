@@ -1,0 +1,50 @@
+{
+  "name": "TTRPG Dice",
+  "version": "1.0.0",
+  "description": "A real-time dice roller for tabletop games inside Zoom.",
+  "icon": "https://ttrpg-dice.vercel.app/icon.png",
+  "homepage_url": "https://ttrpg-dice.vercel.app",
+  "redirect_url": "https://ttrpg-dice.vercel.app/oauth-redirect",
+  "authorization": {
+    "permissions": []
+  },
+  "capabilities": {
+    "zoomapp": {
+      "components": [
+        {
+          "type": "sidebar",
+          "name": "TTRPG Dice",
+          "path": "/"
+        }
+      ]
+    }
+  },
+  "csp": {
+    "scriptSrc": [
+      "'self'",
+      "'unsafe-inline'",
+      "'unsafe-eval'",
+      "https://*.firebaseio.com",
+      "https://www.gstatic.com",
+      "https://www.googleapis.com"
+    ],
+    "connectSrc": [
+      "'self'",
+      "https://*.firebaseio.com",
+      "wss://*.firebaseio.com",
+      "https://www.googleapis.com"
+    ],
+    "styleSrc": [
+      "'self'",
+      "'unsafe-inline'"
+    ],
+    "imgSrc": [
+      "'self'",
+      "data:"
+    ]
+  },
+  "developer": {
+    "name": "Ryan Cole",
+    "email": "r.alexander.cole@gmail.cole"
+  }
+}
